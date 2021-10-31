@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from django.views.generic import TemplateView, ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.core.mail import send_mail
 
 from .forms import LeadForm
 from .models import Agent, Lead
@@ -26,9 +27,15 @@ class LeadDetailView(DetailView):
 class LeadCreateView(CreateView):
     model = Lead
     template_name = 'leads/create_lead.html'
-    form_class = LeadForm()
+    form_class = LeadForm
     success_url = '/crm/'
-
+    send_mail(
+        'Confirm mail',
+        'If you are reading this, you are sent it by CRMuz, please confirm it by clicking',
+        'test@rasuljohn.com',
+        ['rasuljohn139@gmail.com', 'rasuliy550@gmail.com'],
+        fail_silently=False
+    )
 
 
 class LeadUpdateView(UpdateView):
@@ -38,7 +45,11 @@ class LeadUpdateView(UpdateView):
     success_url = '/crm/'
 
 
+class LeadDeleteView(DeleteView):
+    model = Lead
+    success_url = '/crm/'
 
+"""
 def lead_update(request, pk):
     context = {}    
 
@@ -66,3 +77,4 @@ def lead_delete(request, pk):
         return redirect('/')
     
     return render(request, 'leads/delete_lead.html', context)
+"""
